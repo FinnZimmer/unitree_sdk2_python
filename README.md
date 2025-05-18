@@ -1,5 +1,5 @@
 # unitree_sdk2_python
-Python interface for unitree sdk2
+Python interface for unitree sdk2, edited for compatibility with MacOS
 
 # Installation
 ## Dependencies
