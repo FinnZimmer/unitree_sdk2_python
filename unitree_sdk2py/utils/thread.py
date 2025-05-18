@@ -4,6 +4,7 @@ import errno
 import ctypes
 import struct
 import threading
+import platform
 
 from .future import Future
 from .timerfd import *
@@ -65,13 +66,19 @@ class RecurrentThread(Thread):
                 print(f"[RecurrentThread] target func raise exception: name={info[0].__name__}, args={str(info[1].args)}")
 
             try:
-                buf = os.read(tfd, 8)
+                if platform.system() == 'Darwin':
+                    buf = tfd.read(8)
+                else:
+                    buf = os.read(tfd, 8)
                 # print(struct.unpack("Q", buf)[0])
             except OSError as e:
                 if e.errno != errno.EAGAIN:
                     raise e
 
-        os.close(tfd)
+        if platform.system() == 'Darwin':
+            tfd.close()
+        else:
+            os.close(tfd)
     
     def __LoopFunc_0(self):
         while not self.__quit:
